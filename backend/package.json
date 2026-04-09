@@ -1,0 +1,23 @@
+{
+  "name": "fittogether-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --testEnvironment node"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  }
+}

@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-base: #0a0a0f;
+  --bg-card: #12121a;
+  --partner1: #8b5cf6;
+  --partner1-dark: #6d28d9;
+  --partner2: #f43f5e;
+  --partner2-dark: #e11d48;
+  --recovery-green: #10b981;
+  --recovery-yellow: #f59e0b;
+  --recovery-red: #ef4444;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --border: rgba(255, 255, 255, 0.08);
+  --glass: rgba(255, 255, 255, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: var(--bg-base);
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* Glass card */
+.glass-card {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+/* Recovery ring animation — CSS-driven, no JS animation loop */
+.recovery-ring-track {
+  fill: none;
+  stroke: rgba(255,255,255,0.08);
+  stroke-linecap: round;
+}
+
+.recovery-ring-fill {
+  fill: none;
+  stroke-linecap: round;
+  stroke-dasharray: 283;
+  stroke-dashoffset: 283;
+  transition: stroke-dashoffset 1.4s cubic-bezier(0.4, 0, 0.2, 1),
+              stroke 0.3s ease;
+  transform-origin: center;
+  transform: rotate(-90deg);
+}
+
+.recovery-ring-fill.animate {
+  stroke-dashoffset: var(--dash-offset);
+}
+
+/* Number counter */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Shimmer skeleton */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.08) 50%,
+    rgba(255,255,255,0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+/* Live pulse dot */
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.live-dot {
+  animation: livePulse 2s ease-in-out infinite;
+}
+
+/* Gradient text */
+.gradient-text-partner1 {
+  background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-partner2 {
+  background: linear-gradient(135deg, #fb7185, #f43f5e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Chart tooltip */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: #1a1a2e !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  border-radius: 8px !important;
+}

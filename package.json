@@ -1,0 +1,13 @@
+{
+  "name": "fittogether",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\" --names \"frontend,backend\" --prefix-colors \"magenta,cyan\"",
+    "build": "npm run build --prefix frontend",
+    "install:all": "npm install && npm install --prefix frontend && npm install --prefix backend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
