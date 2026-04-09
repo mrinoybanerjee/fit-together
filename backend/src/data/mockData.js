@@ -30,6 +30,7 @@ function generateHistory(partner) {
       hrv: Math.max(20, Math.round(rand(s.hrvBase, s.hrvVariance))),
       strain: Math.min(21, Math.max(0, rand(s.strainBase, s.strainVariance))),
       sleep: Math.max(3, rand(s.sleepBase, s.sleepVariance)),
+      steps: partner === 'sam' ? Math.max(7500, Math.round(rand(9000, 1500))) : undefined,
     });
   }
   return history;

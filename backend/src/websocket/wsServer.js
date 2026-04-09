@@ -65,6 +65,16 @@ export function attachWebSocket(server) {
   return wss;
 }
 
+function computeStreak(history, metric, threshold) {
+  if (!Array.isArray(history) || history.length === 0) return 0;
+  let streak = 0;
+  for (let i = history.length - 1; i >= 0; i--) {
+    if ((history[i]?.[metric] ?? 0) >= threshold) streak++;
+    else break;
+  }
+  return streak;
+}
+
 async function buildPayload() {
   // Reads from cache — no extra API calls
   const [
@@ -90,10 +100,14 @@ async function buildPayload() {
   const allLive = recovSrc === 'live' && terraSrc === 'live';
   const allMock = recovSrc === 'mock' && terraSrc === 'mock';
 
+  const p1StreakDays = computeStreak(whoopHistory, 'recovery', 50);
+  const p2StreakDays = computeStreak(terraHistory, 'steps', 7000);
+
   return {
     type: 'DATA_UPDATE',
     timestamp: new Date().toISOString(),
     dataSource: allLive ? 'live' : allMock ? 'mock' : 'partial',
+    jointStreakDays: Math.min(p1StreakDays, p2StreakDays),
     partner1: {
       name: process.env.PARTNER1_NAME || MOCK_PARTNER1.name,
       device: 'WHOOP',
@@ -109,6 +123,8 @@ async function buildPayload() {
       history: whoopHistory,
       workouts: whoopWorkouts,
       sleepStages: whoopSleep,
+      streakDays: p1StreakDays,
+      milestones: MOCK_PARTNER1.milestones,
     },
     partner2: {
       name: process.env.PARTNER2_NAME || MOCK_PARTNER2.name,
@@ -125,6 +141,8 @@ async function buildPayload() {
       history: terraHistory,
       workouts: terraWorkouts,
       sleepStages: terraSleep,
+      streakDays: p2StreakDays,
+      milestones: MOCK_PARTNER2.milestones,
     },
   };
 }

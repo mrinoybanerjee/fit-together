@@ -108,7 +108,7 @@ export async function getWorkouts() {
     sport: w.sport_id?.toString() ?? 'workout',
     sportEmoji: SPORT_EMOJI[w.sport_id] ?? '💪',
     date: w.start?.split('T')[0],
-    duration: Math.round((w.score?.zone_duration?.zone_two_milli ?? 0 + w.score?.zone_duration?.zone_three_milli ?? 0 + w.score?.zone_duration?.zone_four_milli ?? 0 + w.score?.zone_duration?.zone_five_milli ?? 0) / 60000),
+    duration: Math.round(((w.score?.zone_duration?.zone_two_milli ?? 0) + (w.score?.zone_duration?.zone_three_milli ?? 0) + (w.score?.zone_duration?.zone_four_milli ?? 0) + (w.score?.zone_duration?.zone_five_milli ?? 0)) / 60000),
     strain: w.score?.strain ?? 0,
     calories: w.score?.kilojoule ? Math.round(w.score.kilojoule / 4.184) : 0,
     avgHr: w.score?.average_heart_rate ?? 0,
@@ -165,6 +165,6 @@ export async function handleCallback(code) {
   }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
   accessToken = res.data.access_token;
   refreshToken = res.data.refresh_token;
-  console.log('[Whoop] Tokens obtained. Add to .env:\nWHOOP_ACCESS_TOKEN=' + accessToken + '\nWHOOP_REFRESH_TOKEN=' + refreshToken);
+  console.log('[Whoop] OAuth complete. Tokens stored in memory — copy WHOOP_ACCESS_TOKEN and WHOOP_REFRESH_TOKEN to your .env file to persist them.');
   return { accessToken, refreshToken };
 }
