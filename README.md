@@ -52,7 +52,7 @@ Open **http://localhost:5173** — the demo works with no API keys.
    WHOOP_CLIENT_SECRET=your-client-secret
    ```
 4. Visit **http://localhost:3001/api/whoop/auth** to authorize
-5. Copy the tokens shown into `.env` and restart
+5. Check your **server logs** for `WHOOP_ACCESS_TOKEN` and `WHOOP_REFRESH_TOKEN`, copy them into `.env`, and restart
 
 ### Partner 2 — Apple Watch (via Terra)
 
