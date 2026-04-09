@@ -11,6 +11,9 @@ import { attachWebSocket } from './websocket/wsServer.js';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Trust proxy so express-rate-limit gets real client IPs behind Nginx/load balancers
+app.set('trust proxy', 1);
+
 // CORS — allow Vite dev server and production origin
 app.use(cors({
   origin: [
@@ -39,8 +42,11 @@ app.use((req, res) => {
   res.status(404).json({ error: `Not found: ${req.method} ${req.path}` });
 });
 
-// Error handler
+// Error handler — catch JSON parse errors (400) before generic 500
 app.use((err, req, res, _next) => {
+  if (err.type === 'entity.parse.failed') {
+    return res.status(400).json({ error: 'Invalid JSON in request body' });
+  }
   console.error('[Server Error]', err.message);
   res.status(500).json({ error: 'Internal server error' });
 });
@@ -51,7 +57,7 @@ attachWebSocket(server);
 
 server.listen(PORT, () => {
   console.log(`\n🏃 FitTogether backend running on http://localhost:${PORT}`);
-  console.log(`💡 Demo login: demo@fittogether.com / demo123`);
+  console.log(`💡 Demo login: demo@fittogether.com`);
   console.log(`📡 WebSocket: ws://localhost:${PORT}/ws?token=<JWT>\n`);
 });
 

@@ -43,18 +43,22 @@ router.get('/auth', (req, res) => {
 router.get('/callback', async (req, res) => {
   const { code, error } = req.query;
   if (error || !code) {
-    return res.status(400).send(`<h1>Auth error: ${error || 'no code'}</h1>`);
+    // HTML-escape error to prevent reflected XSS
+    const safeError = String(error || 'no code').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    return res.status(400).send(`<h1>Auth error: ${safeError}</h1>`);
   }
   try {
-    const tokens = await whoop.handleCallback(code);
+    await whoop.handleCallback(code);
     res.send(`
       <h1>✅ Whoop Connected!</h1>
-      <p>Add these to your <code>backend/.env</code>:</p>
-      <pre>WHOOP_ACCESS_TOKEN=${tokens.accessToken}\nWHOOP_REFRESH_TOKEN=${tokens.refreshToken}</pre>
+      <p>Tokens stored in server memory. To persist them across restarts, copy the
+         <code>WHOOP_ACCESS_TOKEN</code> and <code>WHOOP_REFRESH_TOKEN</code> values
+         from your server logs to <code>backend/.env</code>.</p>
       <p>Then restart the server and refresh FitTogether.</p>
     `);
   } catch (err) {
-    res.status(500).send(`<h1>Token exchange failed</h1><pre>${err.message}</pre>`);
+    const safeMsg = String(err.message).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    res.status(500).send(`<h1>Token exchange failed</h1><pre>${safeMsg}</pre>`);
   }
 });
 
